@@ -71,7 +71,7 @@ def test():
         except ValueError:
             print("Make choice by number")
             continue
-        if choice < 0 or choice >= len(hat_list):  #TODO: this is not robust because we don't know all valid ids
+        if choice < 0 or choice >= len(hat_list): 
             print("That is not a valid option")
             continue
         break
