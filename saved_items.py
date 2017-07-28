@@ -51,31 +51,31 @@ class SavedItems(Database):
         cur.execute("INSERT INTO hats(type, name, brief) VALUES('fedora', 'buster', 'small blue fedora')")
         self._db.commit()
 
-    def list_hats(self):
+    def describe_hats(self):
         cursor = self._db.execute('select * from {} order by id'.format('hats'))
-        hats = []
+        hats = {}
         for row in cursor:
-            hats.append('The {} named {} is a {}.'.format(row['type'], row['name'].title(), row['brief']))
+            hats[row['id']] = 'The {} named {} is a {}.'.format(row['type'], row['name'].title(), row['brief'])
         return hats
 
 def test():
     items = SavedItems(filename=ONE_AND_ONLY_DB)
     print("There are various hats to choose from.")
-    hat_list = items.list_hats()
-    for index, hat in enumerate(hat_list):
-        print("{}. ".format(index + 1) + hat)
-    choice = None
+    hats = items.describe_hats()
+    for hat_id, description in sorted(hats.items()):
+        print("{}. ".format(hat_id) + description)
+    hat_id = 0
     while True:
         try:
-            choice = int(input('Which one would you like? >')) - 1
+            hat_id = int(input('Which one would you like? > '))
         except ValueError:
             print("Make choice by number")
             continue
-        if choice < 0 or choice >= len(hat_list): 
+        if hat_id not in hats:
             print("That is not a valid option")
             continue
         break
-    print("Congrats on choosing \"" + hat_list[choice] + "\"")
+    print("Congrats on choosing \"" + hats[hat_id] + "\"")
 
 if __name__ == "__main__":
     test()
